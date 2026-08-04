@@ -1,5 +1,7 @@
 import os
+import sys
 import yt_dlp
+from yt_dlp.utils import DownloadError
 
 def test_audio_download(youtube_url: str, output_dir: str = "audio_downloads"):
     # Ensure local directory exists dynamically
@@ -23,10 +25,16 @@ def test_audio_download(youtube_url: str, output_dir: str = "audio_downloads"):
         'force_keyframes_at_cuts': True,
     }
 
-    print(f"\nDownloading 15-second clip from: {youtube_url}...")
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([youtube_url])
-    print("\nDownload and conversion complete!")
+    print(f"\nAttempting download for: {youtube_url}...")
+    
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([youtube_url])
+        print("\nDownload and conversion complete!")
+        
+    except DownloadError:
+        print("\n[Error] Invalid or unreachable YouTube URL. Please check the link and try again.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
