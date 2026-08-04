@@ -14,7 +14,7 @@ def test_audio_download(youtube_url: str, output_dir: str = "audio_downloads"):
     end_time = 15
 
     ydl_opts = {
-        'format': 'bestaudio',
+        'format': 'bestaudio/best',
         'outtmpl': output_template,
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
