@@ -1,0 +1,28 @@
+# Python Virtual Environment
+.venv/
+venv/
+
+# Python Caches & Compiled Bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+
+# OS-Generated Files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Audio Files & ML Artifacts
+*.mp3
+*.wav
+*.flac
+*.m4a
+*.pth
+*.onnx
+*.pkl
+separated/
+output/
