@@ -2,16 +2,16 @@ import os
 import sys
 import yt_dlp
 from yt_dlp.utils import DownloadError
+from datetime import datetime, timedelta
 
-def test_audio_download(youtube_url: str, output_dir: str = "audio_downloads"):
+def test_audio_download(youtube_url: str, start_time: int, duration: int, output_dir: str = "audio_downloads"):
     # Ensure local directory exists dynamically
     os.makedirs(output_dir, exist_ok=True)
 
     # Output filename template
     output_template = os.path.join(output_dir, "%(title)s.%(ext)s")
 
-    start_time = 0
-    end_time = 15
+    end_time = start_time + duration
 
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -37,10 +37,30 @@ def test_audio_download(youtube_url: str, output_dir: str = "audio_downloads"):
         sys.exit(1)
 
 
+def duration_helper():
+    val = input("Enter 0 for 30 seconds, 1 for 45 seconds, or 2 for 60 seconds:").strip()
+    match val:
+        case "0":
+            return 30
+        case "1": 
+            return 45
+        case "2":
+            return 60
+        case _:
+            print("Error: invalid input. Please try again.")
+            duration_helper()
+
+
 if __name__ == "__main__":
     user_url = input("Enter YouTube URL: ").strip()
+    start_timestamp = input("Enter start timestamp in format xx:xx:xx with no spaces: ").strip()
+    dt = datetime.strptime(start_timestamp, "%H:%M:%S")
+    delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
+    start_seconds = int(delta.total_seconds())
+    duration = duration_helper()
+
 
     if user_url:
-        test_audio_download(user_url)
+        test_audio_download(user_url, start_seconds, duration)
     else:
         print("Error: no URL provided.")
