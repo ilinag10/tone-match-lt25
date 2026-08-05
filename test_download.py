@@ -37,7 +37,7 @@ def test_audio_download(youtube_url: str, start_time: int, duration: int, output
         sys.exit(1)
 
 
-def duration_helper():
+def get_clip_duration():
     val = input("Enter 0 for 30 seconds, 1 for 45 seconds, or 2 for 60 seconds:").strip()
     match val:
         case "0":
@@ -48,16 +48,53 @@ def duration_helper():
             return 60
         case _:
             print("Error: invalid input. Please try again.")
-            duration_helper()
+            get_clip_duration()
+
+def get_video_duration(user_url: str):
+    """Extracts total video duration in seconds without downloading."""
+    ydl_opts = {'quiet': True, 'skip_download': True}
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(user_url, download=False)
+            return int(info.get('duration', 0))
+
+    except DownloadError:
+        print("\n[Error] Invalid or unreachable YouTube URL. Please check the link.")
+        sys.exit(1)
+
+def get_video_information(user_url: str):
+    total_video_duration = get_video_duration(user_url)
+    while True:
+        start_timestamp = input("Enter start timestamp in format HH:MM:SS : ").strip()
+        dt = datetime.strptime(start_timestamp, "%H:%M:%S")
+        delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
+        start_seconds = int(delta.total_seconds())
+        if(start_seconds < 0):
+            print("Error: Invalid format. Please use HH:MM:SS or MM:SS (e.g., 01:15).\n")
+            continue
+        elif(start_seconds + 30 > total_video_duration):
+            print(f"Error: Start time ({start_seconds}s) exceeds total video length ({total_video_duration}s).\n")
+            continue
+        break
+    return(total_video_duration, start_seconds)
+
 
 
 if __name__ == "__main__":
     user_url = input("Enter YouTube URL: ").strip()
-    start_timestamp = input("Enter start timestamp in format xx:xx:xx with no spaces: ").strip()
-    dt = datetime.strptime(start_timestamp, "%H:%M:%S")
-    delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
-    start_seconds = int(delta.total_seconds())
-    duration = duration_helper()
+    if not user_url:
+        print("Error: no URL provided.")
+        sys.exit(1)
+    
+    #start_timestamp = input("Enter start timestamp in format HH:MM:SS or MM:SS: ").strip()
+    #dt = datetime.strptime(start_timestamp, "%H:%M:%S")
+    #delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
+    #start_seconds = int(delta.total_seconds())
+
+    print("Fetching video information...")
+    total_video_duration, start_seconds = get_video_information(user_url)
+
+    duration = get_clip_duration()
 
 
     if user_url:
