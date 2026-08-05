@@ -65,10 +65,9 @@ def get_video_duration(user_url: str):
 def get_video_information(user_url: str):
     total_video_duration = get_video_duration(user_url)
     while True:
-        start_timestamp = input("Enter start timestamp in format HH:MM:SS : ").strip()
-        dt = datetime.strptime(start_timestamp, "%H:%M:%S")
-        delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
-        start_seconds = int(delta.total_seconds())
+        start_timestamp = input("Enter start timestamp in format HH:MM:SS or MM:SS : ").strip()
+        start_seconds = parse_timestamp(start_timestamp)
+
         if(start_seconds < 0):
             print("Error: Invalid format. Please use HH:MM:SS or MM:SS (e.g., 01:15).\n")
             continue
@@ -78,6 +77,18 @@ def get_video_information(user_url: str):
         break
     return(total_video_duration, start_seconds)
 
+def parse_timestamp(timestamp_str: str) -> int:
+    """Helper to parse HH:MM:SS or MM:SS into total seconds."""
+    formats = ["%H:%M:%S", "%M:%S"]
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(timestamp_str, fmt)
+            delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
+            return int(delta.total_seconds())
+        except ValueError:
+            continue
+    return -1
+
 
 
 if __name__ == "__main__":
@@ -86,10 +97,6 @@ if __name__ == "__main__":
         print("Error: no URL provided.")
         sys.exit(1)
     
-    #start_timestamp = input("Enter start timestamp in format HH:MM:SS or MM:SS: ").strip()
-    #dt = datetime.strptime(start_timestamp, "%H:%M:%S")
-    #delta = timedelta(hours=dt.hour, minutes=dt.minute, seconds=dt.second)
-    #start_seconds = int(delta.total_seconds())
 
     print("Fetching video information...")
     total_video_duration, start_seconds = get_video_information(user_url)
