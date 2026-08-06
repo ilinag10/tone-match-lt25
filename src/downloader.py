@@ -4,7 +4,7 @@ import yt_dlp
 from yt_dlp.utils import DownloadError
 from datetime import datetime, timedelta
 
-def test_audio_download(youtube_url: str, start_time: int, duration: int, output_dir: str = "data/raw") -> str:
+def download_audio(youtube_url: str, start_time: int, duration: int, output_dir: str = "data/raw") -> str:
     # Ensure local directory exists dynamically
     os.makedirs(output_dir, exist_ok=True)
 
@@ -91,8 +91,7 @@ def parse_timestamp(timestamp_str: str) -> int:
             continue
     return -1
 
-
-if __name__ == "__main__":
+def run_downloader_cli():
     user_url = input("Enter YouTube URL: ").strip()
     if not user_url:
         print("Error: no URL provided.")
@@ -104,8 +103,10 @@ if __name__ == "__main__":
 
     duration = get_clip_duration()
 
+    wav_path = download_audio(user_url, start_seconds, duration)
+    return wav_path
 
-    if user_url:
-        test_audio_download(user_url, start_seconds, duration)
-    else:
-        print("Error: no URL provided.")
+
+
+if __name__ == "__main__":
+    run_downloader_cli()

@@ -41,3 +41,19 @@ def isolate_guitar_stem(audio_path: str, output_dir: str = "data/processed") -> 
     except Exception as e:
         print(f"[Error] Demucs separation failed: {e}")
         return audio_path
+
+def run_separator_cli(audio_path=None):
+    if not audio_path:
+        audio_path = input("Enter path to WAV file (e.g., data/raw/song.wav): ").strip()
+
+    if not audio_path or not os.path.exists(audio_path):
+        print(f"Error: File not found at '{audio_path}'")
+        return None
+
+    print(f"Starting separation for: {audio_path}")
+    output_dir = isolate_guitar_stem(audio_path, output_dir="data/processed")
+    return output_dir
+
+
+if __name__ == "__main__":
+        run_separator_cli()

@@ -27,3 +27,5 @@ Desktop.ini
 separated/
 output/
 audio_downloads/
+data/raw/*
+data/processed/*
