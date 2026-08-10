@@ -56,4 +56,4 @@ def run_separator_cli(audio_path=None):
 
 
 if __name__ == "__main__":
-        run_separator_cli()
+    run_separator_cli()
