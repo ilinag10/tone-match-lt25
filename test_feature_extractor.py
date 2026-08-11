@@ -2,9 +2,9 @@ import os
 import sys
 import librosa
 import numpy as np
-import src.lt25_mapper
+import src.feature_extractor
 
-def test_feature_mapping():
+def test_feature_extraction():
     sample_file = "data/processed/htdemucs_6s/I Want You to Want Me (Live at Nippon Budokan, Tokyo, JPN - April 1978)/guitar.wav"
 
     if not os.path.exists(sample_file):
@@ -13,7 +13,7 @@ def test_feature_mapping():
 
     print(f"--- Starting Feature Mapping Test on: {sample_file} ---")
 
-    features = src.lt25_mapper.extract_raw_blueprint_features(sample_file)
+    features = src.feature_extractor.extract_raw_blueprint_features(sample_file)
 
     print("\n=== EXTRACTED BLUEPRINT FEATURES ===")
     for key, value in features.items():
@@ -30,4 +30,4 @@ def test_feature_mapping():
 
 
 if __name__ == "__main__": 
-    test_feature_mapping()
+    test_feature_extraction()
