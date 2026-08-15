@@ -5,3 +5,4 @@ demucs
 torch
 torchaudio
 soundfile
+pandas

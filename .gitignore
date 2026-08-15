@@ -29,6 +29,7 @@ output/
 audio_downloads/
 data/raw/*
 data/processed/*
+!data/anchors.csv
 
 
 temp.py

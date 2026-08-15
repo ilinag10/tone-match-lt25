@@ -16,11 +16,25 @@ def download_audio(youtube_url: str, start_time: int, duration: int, output_dir:
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': output_template,
+        # Force yt-dlp to avoid ANDROID_VR and use standard web clients
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['web', 'mweb', 'android']
+            }
+        },
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'wav',
             'preferredquality': '192',
         }],
+        # Fix for FFmpeg HTTP 403 / header propagation
+        'external_downloader_args': {
+            'ffmpeg': ['-headers', 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)']
+        },
+        'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
+        'quiet': False,
+        'no_warnings': False,
+
         'download_ranges': yt_dlp.utils.download_range_func(None, [(start_time, end_time)]),
         'force_keyframes_at_cuts': True,
     }
