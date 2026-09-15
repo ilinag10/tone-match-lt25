@@ -31,8 +31,3 @@ data/raw/*
 data/processed/*
 !data/anchors.csv
 data/anchors_features.csv
-
-scripts/train_classifiers.py
-
-
-temp.py
